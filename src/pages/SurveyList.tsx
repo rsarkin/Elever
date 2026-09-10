@@ -69,7 +69,7 @@ export const SurveyList: React.FC = () => {
         />
       </div>
 
-      {/* Survey Cards Grid */}
+      {/* Survey Cards Stack (Horizontal Skyscanner Style) */}
       {filteredSurveys.length === 0 ? (
         <EmptyState
           title="No Surveys Found"
@@ -84,59 +84,144 @@ export const SurveyList: React.FC = () => {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredSurveys.map(survey => (
-            <div
-              key={survey.id}
-              className="bg-white border border-sand-200 rounded-xl p-5 shadow-xs flex flex-col justify-between hover:shadow-md hover:border-sand-300 transition-all group"
-            >
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-base font-bold text-sand-900 group-hover:text-sky-700 transition-colors">
-                    {survey.name}
-                  </h3>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sand-100 text-sand-600 border border-sand-200 shrink-0 font-semibold">
-                    #{survey.id}
-                  </span>
+        <div className="space-y-4">
+          {filteredSurveys.map(survey => {
+            const hasHighPriority = (survey.high_priority_count && survey.high_priority_count > 0) || survey.id === '1';
+            const isPending = survey.detections_count > survey.confirmed_count;
+
+            // Situational styling logic
+            let theme = {
+              borderHover: 'hover:border-emerald-300',
+              iconBg: 'bg-emerald-50 text-emerald-800 border-emerald-200 group-hover:bg-emerald-600 group-hover:text-white',
+              badgeBg: 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold',
+              badgeText: 'ALL VERIFIED',
+              corridorLine: 'bg-emerald-500',
+              corridorBadge: 'bg-emerald-50 text-emerald-900 border-emerald-200 font-bold',
+              corridorLabel: 'Verified Swath Corridor',
+              targetChipBg: 'bg-emerald-50/80 border-emerald-200 text-emerald-900',
+              statusPill: 'bg-emerald-100 text-emerald-900 border-emerald-300 font-bold',
+              statusText: 'Fully Cataloged',
+              btnBg: 'bg-sky-600 hover:bg-sky-700 text-white', // Blue button
+            };
+
+            if (hasHighPriority) {
+              theme = {
+                borderHover: 'hover:border-rose-300',
+                iconBg: 'bg-rose-50 text-rose-700 border-rose-200 group-hover:bg-rose-600 group-hover:text-white',
+                badgeBg: 'bg-rose-100 text-rose-900 border-rose-300 font-extrabold',
+                badgeText: 'HIGH PRIORITY FLAG',
+                corridorLine: 'bg-rose-500',
+                corridorBadge: 'bg-rose-50 text-rose-900 border-rose-200 font-bold',
+                corridorLabel: 'Urgent Anomaly Triage',
+                targetChipBg: 'bg-rose-50/80 border-rose-200 text-rose-900',
+                statusPill: 'bg-rose-100 text-rose-900 border-rose-300 font-bold',
+                statusText: 'Action Required',
+                btnBg: 'bg-rose-600 hover:bg-rose-700 text-white', // Red button ONLY for high priority
+              };
+            } else if (isPending) {
+              theme = {
+                borderHover: 'hover:border-amber-400',
+                iconBg: 'bg-amber-50 text-amber-800 border-amber-200 group-hover:bg-amber-600 group-hover:text-white',
+                badgeBg: 'bg-amber-100 text-amber-900 border-amber-300 font-bold',
+                badgeText: 'PENDING REVIEW',
+                corridorLine: 'bg-amber-400',
+                corridorBadge: 'bg-amber-50 text-amber-900 border-amber-200 font-bold',
+                corridorLabel: 'Review In Progress',
+                targetChipBg: 'bg-amber-50/80 border-amber-200 text-amber-900',
+                statusPill: 'bg-amber-100 text-amber-900 border-amber-300 font-bold',
+                statusText: 'Verification Pending',
+                btnBg: 'bg-sky-600 hover:bg-sky-700 text-white', // Blue button
+              };
+            }
+
+            return (
+              <div
+                key={survey.id}
+                className={`w-full bg-white border border-sand-200 ${theme.borderHover} rounded-2xl p-5 shadow-xs hover:shadow-md transition-all group flex flex-col lg:flex-row lg:items-center justify-between gap-5`}
+              >
+                {/* Left Column: Swath Badge & Survey Metadata */}
+                <div className="flex items-start gap-4 lg:w-1/3 min-w-[260px]">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shrink-0 shadow-xs transition-all ${theme.iconBg}`}>
+                    <Compass className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-sand-100 text-sand-700 border border-sand-200">
+                        #{survey.id}
+                      </span>
+                      <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border ${theme.badgeBg}`}>
+                        {theme.badgeText}
+                      </span>
+                    </div>
+                    <h3 className="text-base md:text-lg font-bold text-sand-900 group-hover:text-sky-700 transition-colors font-sans leading-tight">
+                      {survey.name}
+                    </h3>
+                    <div className="flex items-center gap-3 text-xs text-sand-600 font-mono pt-0.5">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-sky-600" />
+                        {survey.date}
+                      </span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1.5">
+                        <Layers className="w-3.5 h-3.5 text-sand-400" />
+                        {survey.source || 'Side-Scan Sonar'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-sand-600 font-mono">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-sky-600" />
-                    <span>{survey.date}</span>
+                {/* Center Column: Skyscanner Swath Timeline & Metrics */}
+                <div className="flex-1 px-2 lg:px-6 py-3 lg:py-0 border-y lg:border-y-0 lg:border-x border-sand-200/80 flex flex-col justify-center gap-3">
+                  {/* Swath Corridor Timeline Graphic */}
+                  <div className="flex items-center justify-between text-[11px] font-mono text-sand-600 font-medium">
+                    <span>Swath Start • 58.20°N</span>
+                    <div className="flex-1 mx-4 relative flex items-center justify-center">
+                      <div className="w-full h-0.5 bg-sand-200 rounded-full" />
+                      <div className={`absolute inset-x-0 h-0.5 ${theme.corridorLine} rounded-full w-2/3 mx-auto`} />
+                      <div className={`absolute px-2.5 py-0.5 text-[10px] font-bold rounded-full border shadow-xs ${theme.corridorBadge}`}>
+                        {theme.corridorLabel}
+                      </div>
+                    </div>
+                    <span>Swath End • 19.75°E</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Layers className="w-3.5 h-3.5 text-sand-400" />
-                    <span>{survey.source || 'Standard Sonar Survey'}</span>
+
+                  {/* Metrics Chips */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-sand-50 p-2 rounded-xl border border-sand-200 text-center font-mono">
+                      <span className="text-[10px] text-sand-500 font-bold uppercase block tracking-wider">IMAGES</span>
+                      <span className="text-sm font-extrabold text-sand-900">{survey.image_count} Passes</span>
+                    </div>
+                    <div className={`p-2 rounded-xl border text-center font-mono ${theme.targetChipBg}`}>
+                      <span className="text-[10px] font-bold uppercase block tracking-wider">AI TARGETS</span>
+                      <span className="text-sm font-extrabold">{survey.detections_count} Anomaly</span>
+                    </div>
+                    <div className="bg-emerald-50/70 p-2 rounded-xl border border-emerald-200 text-center font-mono">
+                      <span className="text-[10px] text-emerald-700 font-bold uppercase block tracking-wider">CONFIRMED</span>
+                      <span className="text-sm font-extrabold text-emerald-800">{survey.confirmed_count} Verified</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-sand-50/60 border border-sand-200 grid grid-cols-3 gap-2 text-center text-xs font-mono">
-                  <div>
-                    <span className="text-[10px] text-sand-500 block font-medium">IMAGES</span>
-                    <span className="text-sand-900 font-bold">{survey.image_count}</span>
+                {/* Right Column: Status & Action Button */}
+                <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between lg:justify-center gap-3 shrink-0">
+                  <div className="text-left lg:text-right">
+                    <span className="text-[10px] font-mono text-sand-500 uppercase tracking-wider block font-bold">SITUATION</span>
+                    <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-lg border inline-block mt-0.5 ${theme.statusPill}`}>
+                      {theme.statusText}
+                    </span>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-sand-500 block font-medium">TARGETS</span>
-                    <span className="text-sky-700 font-bold">{survey.detections_count}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-sand-500 block font-medium">CONFIRMED</span>
-                    <span className="text-emerald-700 font-bold">{survey.confirmed_count}</span>
-                  </div>
+
+                  <NavLink
+                    to={`/surveys/${survey.id}`}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold font-mono ${theme.btnBg} transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-95 shrink-0`}
+                  >
+                    <span>Open Workspace</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </NavLink>
                 </div>
               </div>
-
-              <div className="pt-4 mt-4 border-t border-sand-200 flex justify-end">
-                <NavLink
-                  to={`/surveys/${survey.id}`}
-                  className="flex items-center gap-1.5 text-xs font-mono font-bold text-sky-700 hover:text-sky-800 transition-colors"
-                >
-                  Open Workspace <ArrowRight className="w-3.5 h-3.5" />
-                </NavLink>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+.font-chido {
+  font-family: 'Syne', 'Outfit', sans-serif;
+  letter-spacing: -0.03em;
+}
 
 body {
   background-color: #F7F2E8;
@@ -41,6 +47,12 @@ body {
 .leaflet-container {
   background-color: #F7F2E8 !important;
   font-family: inherit;
+}
+
+.leaflet-top.leaflet-left {
+  top: auto !important;
+  bottom: 16px !important;
+  left: 14px !important;
 }
 
 .leaflet-popup-content-wrapper {

@@ -88,18 +88,18 @@ export const ReportTable: React.FC<ReportTableProps> = ({ survey, detections }) 
   };
 
   return (
-    <div className="bg-white border border-sand-200 rounded-xl overflow-hidden shadow-xs flex flex-col">
+    <div className="bg-white border border-sand-200 rounded-2xl overflow-hidden shadow-xs flex flex-col">
       {/* Header Toolbar */}
       <div className="p-4 border-b border-sand-200 bg-sand-50/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <div>
-          <h3 className="text-base font-bold text-sand-900 flex items-center gap-2">
-            <span>Detection Report Table</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-sand-100 text-sand-700 border border-sand-200 font-semibold">
+          <h3 className="text-base font-bold text-sand-900 flex items-center gap-2 font-sans">
+            <span>Hydrographic Anomaly Observations</span>
+            <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-sand-100 text-sand-700 border border-sand-200 font-semibold">
               {filteredDetections.length} Target(s)
             </span>
           </h3>
           <p className="text-xs text-sand-600 mt-0.5 font-sans">
-            Structured side-scan anomaly observations and verification status
+            Structured side-scan acoustic observations and verified target classification log
           </p>
         </div>
 
@@ -107,45 +107,45 @@ export const ReportTable: React.FC<ReportTableProps> = ({ survey, detections }) 
         <div className="flex items-center gap-2">
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 transition-colors shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-white hover:bg-sand-50 text-emerald-800 border border-sand-200 transition-all shadow-xs cursor-pointer active:scale-95"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5" />
-            Export CSV
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            <span>CSV</span>
           </button>
 
           <button
             onClick={handleExportJSON}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 transition-colors shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-white hover:bg-sand-50 text-sky-800 border border-sand-200 transition-all shadow-xs cursor-pointer active:scale-95"
           >
-            <FileJson className="w-3.5 h-3.5" />
-            Export JSON
+            <FileJson className="w-3.5 h-3.5 text-sky-600" />
+            <span>GeoJSON</span>
           </button>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="px-4 py-2.5 bg-sand-50/40 border-b border-sand-200 flex items-center justify-between gap-3">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="w-3.5 h-3.5 text-sand-500 absolute left-2.5 top-2.5" />
+      <div className="px-4 py-3 bg-sand-50/40 border-b border-sand-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="relative flex-1 max-w-xs w-full">
+          <Search className="w-3.5 h-3.5 text-sand-500 absolute left-3 top-2.5" />
           <input
             type="text"
-            placeholder="Search report detections..."
+            placeholder="Search anomaly records..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-sand-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-sand-900 focus:outline-none focus:border-sky-500 font-mono shadow-xs"
+            className="w-full bg-white border border-sand-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-sand-900 focus:outline-none focus:border-sky-500 font-sans shadow-xs"
           />
         </div>
 
-        <div className="flex items-center gap-1 text-xs font-mono">
-          <span className="text-sand-600 mr-1 hidden sm:inline font-medium">Status:</span>
+        <div className="flex items-center gap-1.5 text-xs font-mono">
+          <span className="text-sand-500 mr-1 hidden sm:inline font-semibold">STATUS:</span>
           {['all', 'confirmed', 'ai_detected', 'rejected'].map(st => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-2 py-1 rounded border capitalize text-[11px] ${
+              className={`px-3 py-1 rounded-lg border capitalize text-[11px] font-semibold transition-all cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-sand-100 border-sand-300 text-sky-800 font-bold'
-                  : 'bg-transparent border-transparent text-sand-600 hover:text-sand-900'
+                  ? 'bg-white text-sky-800 shadow-xs border-sand-200'
+                  : 'bg-transparent border-transparent text-sand-600 hover:text-sand-900 hover:bg-sand-100/60'
               }`}
             >
               {st === 'ai_detected' ? 'Pending AI' : st}

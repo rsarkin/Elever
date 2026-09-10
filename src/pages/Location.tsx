@@ -7,7 +7,9 @@ import { LoadingState } from '../components/common/Feedback';
 import { 
   Download, 
   MapPin, 
-  Eye
+  Eye,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 export const LocationPage: React.FC = () => {
@@ -16,6 +18,7 @@ export const LocationPage: React.FC = () => {
   const [allDetections, setAllDetections] = useState<Detection[]>([]);
   const [selectedDetectionId, setSelectedDetectionId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'confirmed' | 'pending' | 'high'>('all');
+  const [isMapExpanded, setIsMapExpanded] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -86,88 +89,95 @@ export const LocationPage: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {/* Top Command & Filter Bar */}
-      <div className="w-full bg-white shadow-xs rounded-xl p-4 md:p-5 border border-sand-200 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-xs text-sky-700 uppercase font-semibold">Hydrographic Spatial View</span>
-              <span className="text-sand-400 font-mono text-xs">•</span>
-              <span className="font-mono text-xs text-emerald-700 font-bold uppercase flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Real-time SSS Link Active
-              </span>
+      {/* Top Command & Filter Card */}
+      <div className="w-full bg-white shadow-xs rounded-2xl p-5 border border-sand-200 space-y-4">
+        {/* Top Header Row: Title & Action Controls */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-sand-200/70">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center border border-sky-200 shrink-0 shadow-xs">
+              <MapPin className="w-5 h-5 text-sky-700" />
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-sand-900 font-sans tracking-tight">Geospatial Anomaly Map</h1>
-            <p className="text-xs text-sand-600 font-sans">Georeferenced acoustic detections across surveyed hydrographic corridors.</p>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold text-sand-900 font-sans tracking-tight">Geospatial Anomaly Map</h1>
+              <p className="text-xs text-sand-600 font-sans">Georeferenced acoustic detections across surveyed hydrographic corridors.</p>
+            </div>
           </div>
 
-          <div className="h-8 w-px bg-sand-200 hidden sm:block" />
+          {/* Right Controls: Swath Selector & GeoJSON Button */}
+          <div className="flex items-center gap-2.5 font-mono text-xs">
+            {/* Survey Selector Dropdown */}
+            <div className="relative min-w-[210px]">
+              <select
+                value={selectedSurveyId}
+                onChange={e => setSelectedSurveyId(e.target.value)}
+                className="w-full bg-sand-50 border border-sand-200 px-3 py-1.5 rounded-xl text-sand-900 font-semibold focus:outline-none focus:border-sky-500 cursor-pointer shadow-xs"
+              >
+                <option value="all">All Survey Swaths ({allDetections.length} Targets)</option>
+                {surveys.map(s => (
+                  <option key={s.id} value={s.id}>
+                    {s.name} ({s.detections_count} Targets)
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Survey Selector Dropdown */}
-          <div className="relative min-w-[240px] font-mono text-xs">
-            <select
-              value={selectedSurveyId}
-              onChange={e => setSelectedSurveyId(e.target.value)}
-              className="w-full bg-sand-50 border border-sand-200 px-3 py-2 rounded-lg text-sand-900 font-semibold focus:outline-none focus:border-sky-500 cursor-pointer shadow-xs"
+            {/* GeoJSON Export */}
+            <button
+              onClick={exportGeoJSON}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-sand-50 border border-sand-200 text-sky-800 font-bold rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
+              title="Export GeoJSON"
             >
-              <option value="all">All Survey Swaths ({allDetections.length} Targets)</option>
-              {surveys.map(s => (
-                <option key={s.id} value={s.id}>
-                  {s.name} ({s.detections_count} Targets)
-                </option>
-              ))}
-            </select>
+              <Download className="w-3.5 h-3.5 text-sky-600" />
+              <span>GeoJSON</span>
+            </button>
           </div>
         </div>
 
-        {/* Filter Pills & GIS Export Options */}
-        <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-start xl:justify-end font-mono text-xs">
-          <div className="bg-sand-50 p-1 rounded-lg flex items-center gap-1 border border-sand-200">
+        {/* Bottom Sub-row: Centered Segmented Filter Tabs */}
+        <div className="flex justify-center w-full pt-0.5 font-mono text-xs">
+          <div className="bg-sand-50/90 p-1 rounded-xl flex items-center justify-center gap-1.5 border border-sand-200 shadow-xs">
             <button
               onClick={() => setFilterStatus('all')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-colors ${
-                filterStatus === 'all' ? 'bg-white text-sky-800 shadow-xs border border-sand-200' : 'text-sand-600 hover:text-sand-900'
+              className={`px-4 py-1.5 rounded-lg font-semibold transition-all flex items-center justify-center text-center cursor-pointer ${
+                filterStatus === 'all'
+                  ? 'bg-white text-sky-800 shadow-xs border border-sand-200'
+                  : 'text-sand-600 hover:text-sand-900 hover:bg-sand-100/60'
               }`}
             >
               All ({surveyDetections.length})
             </button>
             <button
               onClick={() => setFilterStatus('confirmed')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5 ${
-                filterStatus === 'confirmed' ? 'bg-white text-emerald-800 shadow-xs border border-sand-200' : 'text-sand-600 hover:text-sand-900'
+              className={`px-4 py-1.5 rounded-lg font-semibold transition-all flex items-center justify-center text-center gap-2 cursor-pointer ${
+                filterStatus === 'confirmed'
+                  ? 'bg-white text-emerald-800 shadow-xs border border-sand-200'
+                  : 'text-sand-600 hover:text-sand-900 hover:bg-sand-100/60'
               }`}
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               Confirmed ({surveyDetections.filter(d => d.status === 'confirmed').length})
             </button>
             <button
               onClick={() => setFilterStatus('pending')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5 ${
-                filterStatus === 'pending' ? 'bg-white text-amber-800 shadow-xs border border-sand-200' : 'text-sand-600 hover:text-sand-900'
+              className={`px-4 py-1.5 rounded-lg font-semibold transition-all flex items-center justify-center text-center gap-2 cursor-pointer ${
+                filterStatus === 'pending'
+                  ? 'bg-white text-amber-800 shadow-xs border border-sand-200'
+                  : 'text-sand-600 hover:text-sand-900 hover:bg-sand-100/60'
               }`}
             >
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
               Pending ({surveyDetections.filter(d => d.status === 'ai_detected').length})
             </button>
             <button
               onClick={() => setFilterStatus('high')}
-              className={`px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1.5 ${
-                filterStatus === 'high' ? 'bg-white text-rose-800 shadow-xs border border-sand-200' : 'text-sand-600 hover:text-sand-900'
+              className={`px-4 py-1.5 rounded-lg font-semibold transition-all flex items-center justify-center text-center gap-2 cursor-pointer ${
+                filterStatus === 'high'
+                  ? 'bg-white text-rose-800 shadow-xs border border-sand-200'
+                  : 'text-sand-600 hover:text-sand-900 hover:bg-sand-100/60'
               }`}
             >
-              <span className="w-2 h-2 rounded-full bg-rose-500" />
+              <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
               High Priority ({surveyDetections.filter(d => d.priority === 'high').length})
-            </button>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={exportGeoJSON}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-sand-50 border border-sand-200 text-sky-800 font-bold rounded-lg transition-colors shadow-xs"
-            >
-              <Download className="w-3.5 h-3.5 text-sky-600" />
-              <span>GeoJSON</span>
             </button>
           </div>
         </div>
@@ -175,29 +185,24 @@ export const LocationPage: React.FC = () => {
 
       {/* Main Map & Target Dossier Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* Map View Container (8 cols) */}
-        <div className="lg:col-span-8 h-[640px] rounded-xl overflow-hidden shadow-sm border border-sand-200 relative bg-white flex flex-col">
-          <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-xs z-20 border border-sand-200 flex items-center gap-3 font-mono text-xs">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-              <span className="font-bold text-sand-900">RV NEREUS • TOWFISH SSS-455</span>
-            </div>
-            <span className="text-sand-300">•</span>
-            <span className="text-sand-600">ALT: <strong className="text-sand-900">8.4m</strong></span>
-            <span className="text-sand-300">•</span>
-            <span className="text-sand-600">SPD: <strong className="text-sand-900">3.8 kn</strong></span>
-          </div>
-
+        {/* Map View Container (8 cols standard, 12 cols expanded) */}
+        <div
+          className={`transition-all duration-300 ${
+            isMapExpanded ? 'lg:col-span-12 h-[750px]' : 'lg:col-span-8 h-[640px]'
+          } rounded-2xl overflow-hidden shadow-xs border border-sand-200 relative bg-white flex flex-col`}
+        >
           <MapView
             detections={filteredDetections}
             selectedDetectionId={selectedDetectionId}
             onSelectDetection={id => setSelectedDetectionId(id)}
             height="100%"
+            isExpanded={isMapExpanded}
+            onToggleExpand={() => setIsMapExpanded(!isMapExpanded)}
           />
         </div>
 
-        {/* Selected Anomaly Dossier Side Panel (4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-xl shadow-xs border border-sand-200 p-5 space-y-4 font-mono text-xs">
+        {/* Selected Anomaly Dossier Side Panel (4 cols standard, 12 cols expanded) */}
+        <div className={`${isMapExpanded ? 'lg:col-span-12' : 'lg:col-span-4'} bg-white rounded-2xl shadow-xs border border-sand-200 p-5 space-y-4 font-mono text-xs transition-all duration-300`}>
           {selectedDetection ? (
             <>
               <div className="flex items-center justify-between border-b border-sand-200 pb-3">
@@ -220,30 +225,32 @@ export const LocationPage: React.FC = () => {
                 </span>
               </div>
 
-              {/* Confidence & Classification */}
-              <div className="grid grid-cols-2 gap-3 p-3 bg-sand-50 rounded-lg border border-sand-200">
-                <div>
-                  <span className="text-[10px] text-sand-500 font-semibold block mb-0.5">AI CERTAINTY</span>
-                  <span className="text-base font-bold text-emerald-700">
+              {/* Confidence & Classification Center-Aligned Stats */}
+              <div className="grid grid-cols-2 gap-3 p-3.5 bg-sand-50 rounded-xl border border-sand-200 text-center">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="text-[10px] text-sand-500 font-bold uppercase tracking-wider mb-0.5">AI CERTAINTY</span>
+                  <span className="text-2xl font-extrabold text-emerald-700 font-sans">
                     {Math.round(selectedDetection.confidence * 100)}%
                   </span>
+                  <span className="text-[10px] text-sand-500 font-medium">Confidence Score</span>
                 </div>
-                <div>
-                  <span className="text-[10px] text-sand-500 font-semibold block mb-0.5">PRIORITY LEVEL</span>
-                  <span className={`text-xs font-bold uppercase ${
-                    selectedDetection.priority === 'high' ? 'text-rose-700' : selectedDetection.priority === 'medium' ? 'text-amber-700' : 'text-emerald-700'
+                <div className="flex flex-col items-center justify-center">
+                  <span className="text-[10px] text-sand-500 font-bold uppercase tracking-wider mb-0.5">PRIORITY LEVEL</span>
+                  <span className={`text-xs font-bold uppercase px-2.5 py-0.5 rounded-full mt-0.5 ${
+                    selectedDetection.priority === 'high' ? 'bg-rose-100 text-rose-800 border border-rose-200' : selectedDetection.priority === 'medium' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                   }`}>
-                    {selectedDetection.priority} Priority
+                    {selectedDetection.priority}
                   </span>
+                  <span className="text-[10px] text-sand-500 font-medium mt-0.5">Triage Level</span>
                 </div>
               </div>
 
               {/* Geographic Coordinates */}
-              <div className="p-3 bg-sand-50 rounded-lg border border-sand-200 space-y-1.5">
-                <span className="text-[10px] text-sand-500 font-bold uppercase block">
+              <div className="p-3.5 bg-sand-50 rounded-xl border border-sand-200 space-y-1.5">
+                <span className="text-[10px] text-sand-500 font-bold uppercase block text-center tracking-wider">
                   GEOGRAPHIC COORDINATES (WGS-84)
                 </span>
-                <div className="flex justify-between text-sand-900">
+                <div className="flex justify-between text-sand-900 pt-1">
                   <span className="text-sand-600">LATITUDE:</span>
                   <span className="font-bold">{selectedDetection.location?.latitude?.toFixed(6) || '58.204500'}° N</span>
                 </div>
@@ -254,11 +261,11 @@ export const LocationPage: React.FC = () => {
               </div>
 
               {/* Dimensions & Shadow Metadata */}
-              <div className="p-3 bg-sand-50 rounded-lg border border-sand-200 space-y-1.5">
-                <span className="text-[10px] text-sand-500 font-bold uppercase block">
+              <div className="p-3.5 bg-sand-50 rounded-xl border border-sand-200 space-y-1.5">
+                <span className="text-[10px] text-sand-500 font-bold uppercase block text-center tracking-wider">
                   DIMENSIONAL SHADOW ANALYSIS
                 </span>
-                <div className="flex justify-between text-sand-900">
+                <div className="flex justify-between text-sand-900 pt-1">
                   <span className="text-sand-600">SHADOW CAST:</span>
                   <span className="font-bold">6.4m Cast Length</span>
                 </div>
@@ -275,7 +282,7 @@ export const LocationPage: React.FC = () => {
               {/* Action Button */}
               <NavLink
                 to={`/surveys/${selectedDetection.survey_id || '1'}`}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-sans text-xs font-semibold rounded-lg transition-colors shadow-xs"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-sans text-xs font-semibold rounded-xl transition-all shadow-xs text-center cursor-pointer active:scale-98"
               >
                 <Eye className="w-4 h-4" />
                 <span>Open in Sonar Analysis Workspace</span>
