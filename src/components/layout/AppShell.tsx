@@ -67,13 +67,13 @@ export const AppShell: React.FC = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-200 ease-out active:scale-95 cursor-pointer ${
                   isActive
-                    ? 'bg-sky-50 text-sky-700 font-semibold border border-sky-200 shadow-xs'
-                    : 'text-sand-600 hover:text-sand-900 hover:bg-sand-100/60'
+                    ? 'bg-white text-sky-800 border border-sand-200 shadow-xs scale-100'
+                    : 'text-sand-600 hover:text-sand-900 hover:bg-sand-100/70 hover:shadow-2xs'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'text-sky-600 scale-110' : 'text-sand-500'}`} />
                 <span>{item.label}</span>
               </NavLink>
             );
@@ -274,7 +274,7 @@ export const AppShell: React.FC = () => {
       </header>
 
       {/* Main Page Workspace Container */}
-      <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+      <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
         <Outlet />
       </main>
 

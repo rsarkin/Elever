@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { surveyService } from '../services/surveyService';
 import { Survey } from '../types';
-import { LoadingState, EmptyState } from '../components/common/Feedback';
+import { EmptyState } from '../components/common/Feedback';
+import { SurveyListSkeleton } from '../components/common/Skeleton';
 import { Compass, Plus, Search, Layers, Calendar, ArrowRight } from 'lucide-react';
 
 export const SurveyList: React.FC = () => {
@@ -31,7 +32,7 @@ export const SurveyList: React.FC = () => {
   });
 
   if (loading) {
-    return <LoadingState message="Loading surveys catalog..." />;
+    return <SurveyListSkeleton />;
   }
 
   return (

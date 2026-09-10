@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { surveyService } from '../services/surveyService';
 import { DashboardStats, Survey, Detection } from '../types';
 import { LoadingState } from '../components/common/Feedback';
+import { DashboardSkeleton } from '../components/common/Skeleton';
 import { 
   Compass, 
   Activity, 
@@ -78,7 +79,7 @@ export const Dashboard: React.FC = () => {
   };
 
   if (loading || !stats) {
-    return <LoadingState message="Connecting to Hydrographic Acoustic Feeds..." subtext="Loading active transect metadata and sonar waterfall feeds" />;
+    return <DashboardSkeleton />;
   }
 
   return (

@@ -3,14 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { surveyService } from '../services/surveyService';
 import { Detection, Survey } from '../types';
 import { MapView } from '../components/map/MapView';
-import { LoadingState } from '../components/common/Feedback';
-import { 
-  Download, 
-  MapPin, 
-  Eye,
-  Maximize2,
-  Minimize2
-} from 'lucide-react';
+import { LocationSkeleton } from '../components/common/Skeleton';
+import { Download, MapPin, Eye, Maximize2, Minimize2 } from 'lucide-react';
 
 export const LocationPage: React.FC = () => {
   const [surveys, setSurveys] = useState<Survey[]>([]);
@@ -43,7 +37,7 @@ export const LocationPage: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <LoadingState message="Loading Hydrographic Spatial Map..." subtext="Rendering bathymetric vector grids and georeferenced anomaly pins" />;
+    return <LocationSkeleton />;
   }
 
   const surveyDetections = selectedSurveyId === 'all'

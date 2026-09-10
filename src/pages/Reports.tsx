@@ -2,17 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { surveyService } from '../services/surveyService';
 import { Survey, Detection } from '../types';
 import { ReportTable } from '../components/reports/ReportTable';
-import { LoadingState } from '../components/common/Feedback';
-import { 
-  FileText, 
-  ShieldCheck, 
-  Download, 
-  FileSpreadsheet, 
-  FileJson, 
-  Award,
-  Lock,
-  Filter
-} from 'lucide-react';
+import { ReportsSkeleton } from '../components/common/Skeleton';
+import { FileText, ShieldCheck, Download, Award, Lock, Filter } from 'lucide-react';
 
 export const Reports: React.FC = () => {
   const [surveys, setSurveys] = useState<Survey[]>([]);
@@ -39,7 +30,7 @@ export const Reports: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <LoadingState message="Compiling Hydrographic Anomaly Dossiers..." subtext="Loading IHO S-44 audit records and signed verification sheets" />;
+    return <ReportsSkeleton />;
   }
 
   const activeDetections = selectedSurveyId === 'all'
