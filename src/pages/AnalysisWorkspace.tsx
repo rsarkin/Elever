@@ -112,27 +112,37 @@ export const AnalysisWorkspace: React.FC = () => {
 
         {/* View Switching & Report Link */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center p-1 bg-sand-50 rounded-lg border border-sand-200 text-xs font-mono">
+          <div className="flex items-center gap-1 text-xs font-mono">
             <button
               onClick={() => setActiveTab('sonar')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-colors ${
+              className={`relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 ease-out cursor-pointer ${
                 activeTab === 'sonar'
-                  ? 'bg-white text-sky-700 font-bold border border-sand-200 shadow-xs'
-                  : 'text-sand-600 hover:text-sand-900'
+                  ? 'text-sky-600 font-bold'
+                  : 'text-sand-600 font-medium hover:text-sky-600 hover:-translate-y-0.5'
               }`}
             >
-              <Layers className="w-3.5 h-3.5" /> Sonar Canvas
+              <span className="absolute inset-0 rounded-lg bg-sand-100/0 group-hover:bg-sand-100/80 transition-all duration-200 -z-10" />
+              <Layers className={`w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'sonar' ? 'text-sky-600' : 'text-sand-500'}`} />
+              <span>Sonar Canvas</span>
+              {activeTab === 'sonar' && (
+                <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-sky-600 rounded-full animate-in fade-in zoom-in-95 duration-200" />
+              )}
             </button>
 
             <button
               onClick={() => setActiveTab('map')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-colors ${
+              className={`relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 ease-out cursor-pointer ${
                 activeTab === 'map'
-                  ? 'bg-white text-sky-700 font-bold border border-sand-200 shadow-xs'
-                  : 'text-sand-600 hover:text-sand-900'
+                  ? 'text-sky-600 font-bold'
+                  : 'text-sand-600 font-medium hover:text-sky-600 hover:-translate-y-0.5'
               }`}
             >
-              <Map className="w-3.5 h-3.5" /> Map View
+              <span className="absolute inset-0 rounded-lg bg-sand-100/0 group-hover:bg-sand-100/80 transition-all duration-200 -z-10" />
+              <Map className={`w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'map' ? 'text-sky-600' : 'text-sand-500'}`} />
+              <span>Map View</span>
+              {activeTab === 'map' && (
+                <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-sky-600 rounded-full animate-in fade-in zoom-in-95 duration-200" />
+              )}
             </button>
           </div>
 
