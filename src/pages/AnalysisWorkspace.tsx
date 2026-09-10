@@ -112,37 +112,39 @@ export const AnalysisWorkspace: React.FC = () => {
 
         {/* View Switching & Report Link */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-xs font-mono">
+          <div className="flex items-center gap-3 text-xs font-mono">
             <button
               onClick={() => setActiveTab('sonar')}
-              className={`relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 ease-out cursor-pointer ${
+              className={`relative group flex items-center gap-1.5 py-1.5 px-1 font-semibold transition-colors duration-300 cursor-pointer ${
                 activeTab === 'sonar'
                   ? 'text-sky-600 font-bold'
-                  : 'text-sand-600 font-medium hover:text-sky-600 hover:-translate-y-0.5'
+                  : 'text-sand-600 hover:text-sky-600'
               }`}
             >
-              <span className="absolute inset-0 rounded-lg bg-sand-100/0 group-hover:bg-sand-100/80 transition-all duration-200 -z-10" />
-              <Layers className={`w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'sonar' ? 'text-sky-600' : 'text-sand-500'}`} />
+              <Layers className={`w-3.5 h-3.5 transition-colors duration-300 ${activeTab === 'sonar' ? 'text-sky-600' : 'text-sand-500 group-hover:text-sky-600'}`} />
               <span>Sonar Canvas</span>
-              {activeTab === 'sonar' && (
-                <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-sky-600 rounded-full animate-in fade-in zoom-in-95 duration-200" />
-              )}
+              <span
+                className={`absolute bottom-0 left-0 h-[2px] bg-sky-600 transition-all duration-300 ease-out ${
+                  activeTab === 'sonar' ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}
+              />
             </button>
 
             <button
               onClick={() => setActiveTab('map')}
-              className={`relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 ease-out cursor-pointer ${
+              className={`relative group flex items-center gap-1.5 py-1.5 px-1 font-semibold transition-colors duration-300 cursor-pointer ${
                 activeTab === 'map'
                   ? 'text-sky-600 font-bold'
-                  : 'text-sand-600 font-medium hover:text-sky-600 hover:-translate-y-0.5'
+                  : 'text-sand-600 hover:text-sky-600'
               }`}
             >
-              <span className="absolute inset-0 rounded-lg bg-sand-100/0 group-hover:bg-sand-100/80 transition-all duration-200 -z-10" />
-              <Map className={`w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'map' ? 'text-sky-600' : 'text-sand-500'}`} />
+              <Map className={`w-3.5 h-3.5 transition-colors duration-300 ${activeTab === 'map' ? 'text-sky-600' : 'text-sand-500 group-hover:text-sky-600'}`} />
               <span>Map View</span>
-              {activeTab === 'map' && (
-                <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-sky-600 rounded-full animate-in fade-in zoom-in-95 duration-200" />
-              )}
+              <span
+                className={`absolute bottom-0 left-0 h-[2px] bg-sky-600 transition-all duration-300 ease-out ${
+                  activeTab === 'map' ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}
+              />
             </button>
           </div>
 

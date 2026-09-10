@@ -59,7 +59,7 @@ export const AppShell: React.FC = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <nav className="flex items-center gap-1 md:gap-3">
+        <nav className="flex items-center gap-3 md:gap-5">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
@@ -67,22 +67,21 @@ export const AppShell: React.FC = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`relative group flex items-center gap-2 px-3.5 py-2 text-xs md:text-sm transition-all duration-200 ease-out active:scale-95 cursor-pointer rounded-lg ${
+                className={`relative group flex items-center gap-2 py-2 px-1 text-xs md:text-sm font-semibold transition-colors duration-300 cursor-pointer ${
                   isActive
                     ? 'text-sky-600 font-bold'
-                    : 'text-sand-600 font-semibold hover:text-sky-600 hover:-translate-y-0.5'
+                    : 'text-sand-600 hover:text-sky-600'
                 }`}
               >
-                {/* Background hover highlight effect */}
-                <span className="absolute inset-0 rounded-lg bg-sand-100/0 group-hover:bg-sand-100/80 transition-all duration-200 ease-out -z-10" />
+                <Icon className={`w-4 h-4 transition-colors duration-300 ${isActive ? 'text-sky-600' : 'text-sand-500 group-hover:text-sky-600'}`} />
+                <span className="transition-colors duration-300">{item.label}</span>
 
-                <Icon className={`w-4 h-4 transition-all duration-200 group-hover:scale-110 group-hover:text-sky-600 ${isActive ? 'text-sky-600' : 'text-sand-500'}`} />
-                <span className="transition-colors duration-200">{item.label}</span>
-
-                {/* Solid blue active bottom indicator line */}
-                {isActive && (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-sky-600 rounded-full animate-in fade-in zoom-in-95 duration-200" />
-                )}
+                {/* Left to right indicator line animation on hover, solid on active */}
+                <span
+                  className={`absolute bottom-0 left-0 h-[2px] bg-sky-600 transition-all duration-300 ease-out ${
+                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                />
               </NavLink>
             );
           })}
