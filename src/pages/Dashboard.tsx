@@ -172,7 +172,7 @@ export const Dashboard: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
                 <h3 className="font-bold text-sand-900 text-base font-sans">
-                  Active Swath Waterfall • Baltic Transect 04-B
+                  Active Swath Waterfall • Alibaug Transect 04-B (Arabian Sea)
                 </h3>
               </div>
               <div className="flex items-center gap-2 font-mono text-xs">
@@ -184,9 +184,9 @@ export const Dashboard: React.FC = () => {
             {/* Waterfall Sonar Canvas Container */}
             <div className="relative w-full h-52 bg-sand-900 rounded-lg overflow-hidden flex items-center justify-center border border-sand-700">
               <img
-                src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80"
+                src="/sonar_waterfall_feed.jpg"
                 alt="Active side scan sonar swath feed"
-                className="w-full h-full object-cover filter contrast-125 sepia brightness-90 opacity-90"
+                className="w-full h-full object-cover brightness-105"
               />
 
               {/* Nadir Blind Zone Center Line Overlay */}
@@ -378,7 +378,7 @@ export const Dashboard: React.FC = () => {
                           {det.class_name}
                         </h3>
                         <span className="font-mono text-[11px] text-sand-500">
-                          {index === 0 ? 'Kattegat Shoal • Depth 38.4m' : index === 1 ? 'Baltic Transect 04-B • Depth 64.1m' : 'Dogger Bank • Depth 29.5m'}
+                          {index === 0 ? 'Mumbai Offshore • Depth 38.4m' : index === 1 ? 'Alibaug Transect 04-B • Depth 64.1m' : 'Mandwa Channel • Depth 29.5m'}
                         </span>
                       </div>
                       <div className="flex flex-col items-end shrink-0 font-mono">

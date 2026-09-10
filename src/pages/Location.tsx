@@ -60,7 +60,7 @@ export const LocationPage: React.FC = () => {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [d.location?.longitude || 19.75, d.location?.latitude || 58.20],
+          coordinates: [d.location?.longitude || 72.8120, d.location?.latitude || 18.6415],
         },
         properties: {
           id: d.id,
@@ -246,11 +246,11 @@ export const LocationPage: React.FC = () => {
                 </span>
                 <div className="flex justify-between text-sand-900 pt-1">
                   <span className="text-sand-600">LATITUDE:</span>
-                  <span className="font-bold">{selectedDetection.location?.latitude?.toFixed(6) || '58.204500'}° N</span>
+                  <span className="font-bold">{selectedDetection.location?.latitude?.toFixed(6) || '18.641500'}° N</span>
                 </div>
                 <div className="flex justify-between text-sand-900">
                   <span className="text-sand-600">LONGITUDE:</span>
-                  <span className="font-bold">{selectedDetection.location?.longitude?.toFixed(6) || '19.752180'}° E</span>
+                  <span className="font-bold">{selectedDetection.location?.longitude?.toFixed(6) || '72.812000'}° E</span>
                 </div>
               </div>
 

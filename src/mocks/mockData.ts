@@ -12,7 +12,7 @@ export const INITIAL_DETECTIONS: Detection[] = [
     status: 'ai_detected',
     bbox: { x: 31.6, y: 26.2, width: 7.5, height: 6.8 },
     dimensions: { width: 2.8, height: 1.2 },
-    location: { latitude: 18.5204, longitude: 73.8567 },
+    location: { latitude: 18.6415, longitude: 72.8120 }, // Arabian Sea off Alibaug Coast
     notes: 'Acoustic shadow confirms rigid metal cage geometry with tangled netting.',
     created_at: '2026-09-09T14:32:00Z',
   },
@@ -26,7 +26,7 @@ export const INITIAL_DETECTIONS: Detection[] = [
     status: 'confirmed',
     bbox: { x: 62.5, y: 60.0, width: 8.2, height: 7.5 },
     dimensions: { width: 1.9, height: 1.5 },
-    location: { latitude: 18.5241, longitude: 73.8592 },
+    location: { latitude: 18.6580, longitude: 72.8250 }, // Arabian Sea off Alibaug / Mandwa Channel
     notes: 'Confirmed by operator. Rectangular container structure.',
     created_at: '2026-09-09T14:35:10Z',
   },

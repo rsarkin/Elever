@@ -121,7 +121,7 @@ export const surveyService = {
         status: 'ai_detected',
         bbox: { x: 35.0, y: 24.0, width: 8.5, height: 7.2 },
         dimensions: { width: 2.4, height: 1.1 },
-        location: { latitude: 18.5204 + (Math.random() * 0.01 - 0.005), longitude: 73.8567 + (Math.random() * 0.01 - 0.005) },
+        location: { latitude: 18.6415 + (Math.random() * 0.04 - 0.02), longitude: 72.8120 + (Math.random() * 0.04 - 0.02) },
         notes: 'AI auto-detected candidate target.',
         created_at: new Date().toISOString(),
       },

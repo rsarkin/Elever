@@ -46,13 +46,26 @@ export const MapView: React.FC<MapViewProps> = ({
     }
   };
 
+  // Invalidate map size when expanded or mode changed to ensure complete tile rendering
+  useEffect(() => {
+    if (mapInstanceRef.current && mapMode === 'gis') {
+      mapInstanceRef.current.invalidateSize();
+      const timer = setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [isExpanded, mapMode]);
+
   useEffect(() => {
     if (mapMode !== 'gis' || !mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
       const defaultCenter: [number, number] = validGeolocatedDetections.length > 0
         ? [validGeolocatedDetections[0].location!.latitude!, validGeolocatedDetections[0].location!.longitude!]
-        : [58.2045, 19.7521];
+        : [18.6415, 72.8120];
 
       const map = L.map(mapContainerRef.current, {
         center: defaultCenter,
@@ -60,9 +73,9 @@ export const MapView: React.FC<MapViewProps> = ({
         zoomControl: false,
       });
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
-        subdomains: 'abcd',
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abc',
         maxZoom: 19,
       }).addTo(map);
 
@@ -70,6 +83,7 @@ export const MapView: React.FC<MapViewProps> = ({
     }
 
     const map = mapInstanceRef.current;
+    map.invalidateSize();
 
     Object.values(markersRef.current).forEach(m => m.remove());
     markersRef.current = {};
